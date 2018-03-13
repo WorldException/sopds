@@ -1,0 +1,29 @@
+version: "2"
+services:
+  db:
+    image: mariadb:10.3.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=sopds
+      - MYSQL_DATABASE=sopds
+      - MYSQL_USER=sopds
+      - MYSQL_PASSWORD=sopds
+    volumes:
+      - "db-data:/var/lib/mysql"
+      - "./db/tables.sql:/docker-entrypoint-initdb.d/1_tables.sql:ro"
+      - "./db/genres.sql:/docker-entrypoint-initdb.d/2_genres.sql:ro"
+  sopds:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: sopds:latest
+    links:
+      - db:db
+    depends_on:
+      - db
+    ports:
+      - 8081:8081
+    volumes:
+      - "../books:/books"
+volumes:
+  db-data:
+

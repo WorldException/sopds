@@ -248,3 +248,23 @@ mod_wsgi.
 
   Ну и перезагрузил Apache.  
   
+5. Запуск с помощью Docker
+
+Скачать исходники 
+
+    git clone https://github.com/WorldException/sopds.git
+
+Подправить в docker-compose.yml путь к вашей библиотеке с архивами книг
+
+    volumes:
+      - "ВашПутьЗдесь:/books"
+
+Потом создать образ и запустить
+
+    docker-compose build
+    docker-compose up -d
+
+Удалить образ и данные (кроме вашей папки с книгами)
+
+    docker-compose down
+
