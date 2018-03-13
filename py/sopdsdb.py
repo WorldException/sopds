@@ -54,9 +54,13 @@ class opdsDatabase:
     self.db_host=ihost
     self.errcode=0
     self.err=""
-    self.isopen=False
     self.next_page=False
     self.root_lib=iroot_lib
+    self.cnx = None
+
+  @property
+  def isopen(self):
+    return not self.cnx is None and self.cnx.is_connected()
 
   def openDB(self):
     if not self.isopen:
@@ -73,8 +77,9 @@ class opdsDatabase:
          else:
             self.err=err
             self.errcode=3
-      else:
-         self.isopen=True
+      except Exception as err_all:
+        self.err=err_all.message
+        self.errcode=3
     else:
       self.errcode=4
       self.err="Error open database. Database Already open."
@@ -82,7 +87,7 @@ class opdsDatabase:
   def closeDB(self):
     if self.isopen:
       self.cnx.close()
-      self.isopen=False
+      self.cnx = None
     else:
       self.errcode=5
       self.err="Attempt to close not opened database."
